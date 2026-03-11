@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>alpinejs-component v2 demo</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <script
+      defer
+      src="https://unpkg.com/alpinejs-component@latest/dist/component.min.js"
+    ></script>
+
+    <script
+      defer
+      src="https://unpkg.com/alpinejs@latest/dist/cdn.min.js"
+    ></script>
+
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <style title="person-accent">
+      .accent-card {
+        border: 1px solid oklch(69.6% 0.17 162.48);
+        box-shadow:
+          1px 1px oklch(76.5% 0.177 163.223),
+          2px 2px oklch(76.5% 0.177 163.223),
+          3px 3px oklch(76.5% 0.177 163.223);
+        padding: 16px;
+        background-color: oklch(95% 0.052 163.051);
+        color: oklch(43.2% 0.095 166.913);
+
+        > * + * {
+          margin: 8px 0 0;
+        }
+      }
+
+      .accent-card h3 {
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .accent-card ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-left: 0;
+        list-style: none;
+      }
+
+      .accent-card li {
+        background-color: oklch(90.5% 0.093 164.15);
+        border: 1px solid oklch(84.5% 0.143 164.978);
+        padding: 8px 16px;
+        font-size: 12px;
+        line-height: 1;
+        font-weight: 600;
+      }
+    </style>
+
+    <main class="mx-auto max-w-7xl px-4 py-8">
+      <h1 class="text-3xl font-semibold md:text-4xl">Alpine JS Components</h1>
+
+      <p class="mt-4 text-gray-700">
+        Explicit examples for all key behaviors: template mode, URL mode,
+        dynamic sources, slots, style targeting, lifecycle events, and failure
+        paths.
+      </p>
+
+      <div
+        class="max-w-lg mt-6 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
+      >
+        <strong>Tailwind CSS + Shadow DOM:</strong> classes inside component
+        templates may not be generated automatically by browser Tailwind CSS
+        CDN. There's a hidden block that safelists utility classes used by
+        template content.
+      </div>
+
+      <div
+        class="hidden list-disc pl-4 mt-2 flex flex-wrap gap-3 font-semibold p-3 border border-gray-300 rounded-lg text-sm bg-sky-100 text-sky-700 bg-sky-700 text-white bg-rose-100 text-rose-700 bg-amber-100 text-amber-800"
+      ></div>
+
+      <section
+        class="grid gap-4 md:grid-cols-2 mt-12 pt-12 border-t border-gray-300"
+      >
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3"
+          x-data="{
+            people: [
+              { name: 'Ada Lovelace', age: 36, skills: ['Math', 'Poetry'] },
+              { name: 'Grace Hopper', age: 85, skills: ['COBOL', 'Compilers'] }
+            ]
+          }"
+        >
+          <h2 class="text-lg font-semibold">1. Base (Template)</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Render from an on-page template.
+          </p>
+
+          <ul class="grid gap-4 mt-4">
+            <template x-for="person in people" :key="person.name">
+              <li>
+                <div
+                  x-data="{ item: person }"
+                  x-component="'person-card'"
+                  x-component-styles="global"
+                ></div>
+              </li>
+            </template>
+          </ul>
+        </article>
+
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3"
+          x-data="{
+            people: [
+              { name: 'Ada Lovelace', age: 36, skills: ['Math', 'Poetry'] },
+              { name: 'Grace Hopper', age: 85, skills: ['COBOL', 'Compilers'] }
+            ]
+          }"
+        >
+          <h2 class="text-lg font-semibold">2. Base (URL)</h2>
+
+          <p class="mt-2 text-sm text-gray-700">Render from a URL template.</p>
+
+          <ul class="grid gap-4 mt-4">
+            <template x-for="person in people" :key="person.name">
+              <li>
+                <div
+                  x-data="{ item: person }"
+                  x-component.url="'/public/person-card.html'"
+                  x-component-styles="global"
+                ></div>
+              </li>
+            </template>
+          </ul>
+        </article>
+
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3 md:col-span-2"
+          x-data="{
+            people: [
+              { name: 'Ada Lovelace', age: 36, skills: ['Math', 'Poetry'] },
+              { name: 'Grace Hopper', age: 85, skills: ['COBOL', 'Compilers'] }
+            ],
+            template: 'person-card',
+            url: '/public/person-card.html'
+          }"
+        >
+          <h2 class="text-lg font-semibold">3. Dynamic (Template/URL)</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Dynamically switch between components.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <h3 class="font-semibold">Template</h3>
+
+              <div class="flex gap-3 mt-2">
+                <button
+                  class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  :class="{ 'bg-sky-700 text-white': template === 'person-card' }"
+                  @click="template = 'person-card'"
+                >
+                  Card
+                </button>
+
+                <button
+                  class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  :class="{ 'bg-sky-700 text-white': template === 'person-card-compact' }"
+                  @click="template = 'person-card-compact'"
+                >
+                  Card (Compact)
+                </button>
+              </div>
+
+              <ul class="space-y-4 mt-4">
+                <template x-for="person in people" :key="person.name">
+                  <li>
+                    <div
+                      x-data="{ item: person }"
+                      x-component="template"
+                      x-component-styles="global"
+                    ></div>
+                  </li>
+                </template>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="font-semibold">URL</h3>
+
+              <div class="flex gap-3 mt-2">
+                <button
+                  class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  :class="{ 'bg-sky-700 text-white': url === '/public/person-card.html' }"
+                  @click="url = '/public/person-card.html'"
+                >
+                  Card
+                </button>
+
+                <button
+                  class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  :class="{ 'bg-sky-700 text-white': url === '/public/person-card-compact.html' }"
+                  @click="url = '/public/person-card-compact.html'"
+                >
+                  Card (Compact)
+                </button>
+              </div>
+
+              <ul class="space-y-4 mt-4">
+                <template x-for="person in people" :key="person.name">
+                  <li>
+                    <div
+                      x-data="{ item: person }"
+                      x-component.url="url"
+                      x-component-styles="global"
+                    ></div>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3"
+          x-data="{
+            item: {
+              name: 'Katherine Johnson',
+              age: 38,
+              skills: ['Orbital Mechanics', 'Trajectory Analysis']
+            },
+            updates: 0
+          }"
+        >
+          <h2 class="text-lg font-semibold">4. Slots (Default + Named)</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Inject default and named slot content from the host element.
+          </p>
+
+          <div
+            class="mt-4"
+            x-component="'person-card'"
+            x-component-styles="global"
+          >
+            <template x-slot>
+              <div
+                class="border border-dashed border-gray-300 rounded bg-gray-50 p-2 my-2 text-sm text-gray-700"
+              >
+                Updates: <span x-text="updates"></span>
+              </div>
+            </template>
+
+            <template x-slot="actions">
+              <div class="flex gap-2 mt-2">
+                <button
+                  class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  @click="item.age++; updates++;"
+                >
+                  Age +1
+                </button>
+
+                <button
+                  class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-sm text-sm font-semibold"
+                  @click="item.age--; updates++;"
+                >
+                  Age -1
+                </button>
+              </div>
+            </template>
+          </div>
+        </article>
+
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3"
+          x-data="{
+            url: '/public/person-card.html',
+            status: 'idle',
+            bust: false
+          }"
+        >
+          <h2 class="text-lg font-semibold">5. Lifecycle Events</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Listen to loading, loaded, and error events from URL rendering.
+          </p>
+
+          <div class="flex items-center gap-3 mt-4">
+            <button
+              class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+              :class="{ 'bg-sky-700 text-white': url === '/public/person-card.html' }"
+              @click="url = `/public/person-card.html${bust ? `?t=${Date.now()}` : ''}`"
+            >
+              Valid URL
+            </button>
+
+            <button
+              class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
+              :class="{ 'bg-sky-700 text-white': url === '/public/does-not-exist.html' }"
+              @click="url = '/public/does-not-exist.html'"
+            >
+              Invalid URL
+            </button>
+
+            <label class="inline-flex items-center gap-1">
+              <input
+                type="checkbox"
+                class="size-4 border border-gray-300 rounded"
+                x-model="bust"
+              />
+
+              <span class="font-semibold text-sm text-gray-700">
+                Bust Cache
+              </span>
+            </label>
+          </div>
+
+          <div
+            class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
+          >
+            Toggle the "Bust Cache" option to force reloads by appending a
+            timestamp query parameter. Doing so will ignore cached templates and
+            trigger loading and loaded events on each click.
+
+            <hr class="border-none h-px my-3 bg-amber-200" />
+
+            Not seeing the loading state? Try opening the Network tab of your
+            browser's developer tools and throttling the network speed to "Slow
+            3G."
+          </div>
+
+          <div
+            class="mt-4"
+            x-data="{ item: { name: 'Hedy Lamarr', age: 85, skills: ['Frequency Hopping'] } }"
+            x-component.url="url"
+            x-component-styles="global"
+            @x-component:loading="status = 'LOADING';"
+            @x-component:loaded="status = 'LOADED';"
+            @x-component:error="status = 'ERROR';"
+          >
+            <template x-slot>
+              <div x-cloak x-show="status === 'LOADING'">Loading...</div>
+            </template>
+          </div>
+
+          <pre
+            class="mt-4 p-3 bg-gray-700 text-gray-300 text-xs rounded-lg"
+          >Status: <span x-text="status"></span></pre>
+        </article>
+
+        <article
+          class="rounded-2xl border bg-white border-gray-300 p-3"
+          x-data="{ item: { name: 'Dorothy Vaughan', age: 98, skills: ['FORTRAN', 'Leadership'] } }"
+        >
+          <h2 class="text-lg font-semibold">6. Named Stylesheet Target</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Apply only a specific stylesheet title with
+            <code>x-component-styles</code>.
+          </p>
+
+          <div
+            class="mt-4"
+            x-component="'person-card-accent'"
+            x-component-styles="person-accent"
+          ></div>
+        </article>
+
+        <article class="rounded-2xl border bg-white border-gray-300 p-3">
+          <h2 class="text-lg font-semibold">7. Failure Paths</h2>
+
+          <p class="mt-2 text-sm text-gray-700">
+            Missing templates and bad URLs fail gracefully without breaking the
+            page.
+          </p>
+
+          <div class="mt-4 space-y-4">
+            <div class="rounded-lg border border-gray-300 p-3">
+              <div x-component="'does-not-exist'"></div>
+
+              <p class="text-sm text-gray-700">
+                Nothing here? Good, that means the component failed to load but
+                did so gracefully without breaking the page.
+              </p>
+            </div>
+
+            <div
+              class="rounded-lg border border-gray-300 p-3"
+              x-data="{ error: '' }"
+            >
+              <div
+                x-component.url="'/public/does-not-exist.html'"
+                @x-component:error="error = $event.detail.error ? $event.detail.error.message : 'Unknown error'"
+              ></div>
+
+              <p class="text-sm text-gray-700">
+                Or we could listen for an error event and display the message if
+                we wanted to.
+
+                <br />
+
+                <span
+                  x-cloak
+                  x-show="error"
+                  x-text="error"
+                  class="text-rose-700"
+                ></span>
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <template id="person-card">
+      <article class="p-3 border border-gray-300 rounded-lg">
+        <h3 class="font-semibold" x-text="item.name"></h3>
+
+        <p class="mt-1 text-sm">Age: <span x-text="item.age"></span></p>
+
+        <slot></slot>
+
+        <ul class="list-disc pl-4 mt-2 text-sm">
+          <template x-for="skill in item.skills" :key="skill">
+            <li x-text="skill"></li>
+          </template>
+        </ul>
+
+        <footer>
+          <slot name="actions"></slot>
+        </footer>
+      </article>
+    </template>
+
+    <template id="person-card-compact">
+      <article class="p-3 border border-gray-300 rounded-lg">
+        <h3 class="font-semibold">
+          <span x-text="item.name"></span>
+          (<span x-text="item.age"></span>)
+        </h3>
+
+        <ul class="flex flex-wrap mt-2 text-sm gap-3">
+          <template x-for="skill in item.skills" :key="skill">
+            <li x-text="skill"></li>
+          </template>
+        </ul>
+      </article>
+    </template>
+
+    <template id="person-card-accent">
+      <article class="accent-card">
+        <h3 x-text="item.name"></h3>
+
+        <p>Age: <span x-text="item.age"></span></p>
+
+        <ul>
+          <template x-for="skill in item.skills" :key="skill">
+            <li x-text="skill"></li>
+          </template>
+        </ul>
+      </article>
+    </template>
+  </body>
+</html>
