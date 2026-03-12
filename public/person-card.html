@@ -1,0 +1,13 @@
+<article class="p-3 border border-gray-300 rounded-lg">
+  <h3 class="font-semibold" x-text="item.name"></h3>
+
+  <p class="mt-1 text-sm">Age: <span x-text="item.age"></span></p>
+
+  <slot></slot>
+
+  <ul class="list-disc pl-4 mt-2 text-sm">
+    <template x-for="skill in item.skills" :key="skill">
+      <li x-text="skill"></li>
+    </template>
+  </ul>
+</article>

@@ -1,0 +1,12 @@
+<article class="p-3 border border-gray-300 rounded-lg">
+  <h3 class="font-semibold">
+    <span x-text="item.name"></span>
+    (<span x-text="item.age"></span>)
+  </h3>
+
+  <ul class="flex flex-wrap mt-2 text-sm gap-3">
+    <template x-for="skill in item.skills" :key="skill">
+      <li x-text="skill"></li>
+    </template>
+  </ul>
+</article>
