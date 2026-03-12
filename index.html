@@ -135,7 +135,7 @@
               <li>
                 <div
                   x-data="{ item: person }"
-                  x-component.url="'/public/person-card.html'"
+                  x-component.url="'/components/person-card.html'"
                   x-component-styles="global"
                 ></div>
               </li>
@@ -151,7 +151,7 @@
               { name: 'Grace Hopper', age: 85, skills: ['COBOL', 'Compilers'] }
             ],
             template: 'person-card',
-            url: '/public/person-card.html'
+            url: '/components/person-card.html'
           }"
         >
           <h2 class="text-lg font-semibold">3. Dynamic (Template/URL)</h2>
@@ -201,16 +201,16 @@
               <div class="flex gap-3 mt-2">
                 <button
                   class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
-                  :class="{ 'bg-sky-700 text-white': url === '/public/person-card.html' }"
-                  @click="url = '/public/person-card.html'"
+                  :class="{ 'bg-sky-700 text-white': url === '/components/person-card.html' }"
+                  @click="url = '/components/person-card.html'"
                 >
                   Card
                 </button>
 
                 <button
                   class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
-                  :class="{ 'bg-sky-700 text-white': url === '/public/person-card-compact.html' }"
-                  @click="url = '/public/person-card-compact.html'"
+                  :class="{ 'bg-sky-700 text-white': url === '/components/person-card-compact.html' }"
+                  @click="url = '/components/person-card-compact.html'"
                 >
                   Card (Compact)
                 </button>
@@ -284,7 +284,7 @@
         <article
           class="rounded-2xl border bg-white border-gray-300 p-3"
           x-data="{
-            url: '/public/person-card.html',
+            url: '/components/person-card.html',
             status: 'idle',
             bust: false
           }"
@@ -298,16 +298,16 @@
           <div class="flex items-center gap-3 mt-4">
             <button
               class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
-              :class="{ 'bg-sky-700 text-white': url === '/public/person-card.html' }"
-              @click="url = `/public/person-card.html${bust ? `?t=${Date.now()}` : ''}`"
+              :class="{ 'bg-sky-700 text-white': url === '/components/person-card.html' }"
+              @click="url = `/components/person-card.html${bust ? `?t=${Date.now()}` : ''}`"
             >
               Valid URL
             </button>
 
             <button
               class="bg-sky-100 text-sky-700 px-3 py-1.5 rounded-sm text-sm font-semibold"
-              :class="{ 'bg-sky-700 text-white': url === '/public/does-not-exist.html' }"
-              @click="url = '/public/does-not-exist.html'"
+              :class="{ 'bg-sky-700 text-white': url === '/components/does-not-exist.html' }"
+              @click="url = '/components/does-not-exist.html'"
             >
               Invalid URL
             </button>
@@ -399,7 +399,7 @@
               x-data="{ error: '' }"
             >
               <div
-                x-component.url="'/public/does-not-exist.html'"
+                x-component.url="'/components/does-not-exist.html'"
                 @x-component:error="error = $event.detail.error ? $event.detail.error.message : 'Unknown error'"
               ></div>
 
